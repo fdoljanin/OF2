@@ -114,14 +114,34 @@ class ForceVisual(MovingCameraScene):
         coulombEq[1][4:6].set_color(RED)  # dQ
         self.play(Write(coulombEq), mainChargeLabel.animate.set_color(
             BLUE), observedDiff.text.animate.set_color(RED), run_time=2)
-        coulombEqDensity = MathTex(
+        coulombEqExpand = MathTex(
             r"= k\frac{q\cdot \lambda dL}{r_{12}^2}\hat{r}_{21}", font_size=EQ_FONT_SIZE).next_to(coulombEq, RIGHT)
-        self.play(Write(coulombEqDensity))
+        self.play(Write(coulombEqExpand))
 
-        mainChargeBrace = Brace(Line(ax.get_origin(), mainCharge.get_center()))
+        mainChargeBrace = BraceBetweenPoints(
+            ax.get_origin(), mainCharge.get_center())
         mainChargeBraceText = mainChargeBrace.get_text("x")
-        diffChargeBrace = Brace(
-            Line(ax.get_origin(), observedDiff.charge.get_center()), direction=UP)
+        diffChargeBrace = BraceBetweenPoints(
+            ax.get_origin(), observedDiff.charge.get_center(), direction=LEFT)
         diffChargeBraceText = diffChargeBrace.get_text("L")
         self.play(Create(VGroup(mainChargeBrace, mainChargeBraceText)))
         self.play(Create(VGroup(diffChargeBrace, diffChargeBraceText)))
+
+        coulombEqUpdate = MathTex(
+            r"= k\frac{q\cdot \lambda dL}{L^2+x^2}\hat{r}_{21}", font_size=EQ_FONT_SIZE).next_to(coulombEq, RIGHT)
+        self.play(coulombEqExpand.animate.become(coulombEqUpdate), run_time=2)
+
+        coulombEq_x = MathTex(
+            r"dF_x = dF\frac{x}{\sqrt{x^2+L^2}}", font_size=EQ_FONT_SIZE).next_to(coulombEq, DOWN).align_to(coulombEq, LEFT)
+        coulombEq_y = MathTex(
+            r"dF_y = dF\frac{L}{\sqrt{x^2+L^2}}", font_size=EQ_FONT_SIZE).next_to(coulombEq_x, RIGHT)
+        self.play(Write(coulombEq_x), run_time=2)
+        self.play(Write(coulombEq_y), run_time=2)
+
+        animationQueue = []
+        integrationTitle_x = Tex("Integracija za $x$").move_to(5*DOWN+5*LEFT)
+        coulombDifferential_x = coulombEq_x.copy()
+        animationQueue += [Create(integrationTitle_x),
+                           coulombDifferential_x.animate.next_to(integrationTitle_x, DOWN).align_to(integrationTitle_x, RIGHT)]
+        animationQueue += [self.camera.frame.animate.shift(8*DOWN)]
+        self.play(*animationQueue, run_time=5)
