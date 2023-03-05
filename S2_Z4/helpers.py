@@ -27,3 +27,14 @@ def getCoulombForce(observedCharge: Charge, otherCharge: Charge):
         forceValue * (c2[i]-c1[i]) / chargeDistance for i in range(len(c1))]
 
     return valuesPerDimension
+
+
+def getVectorComponents(observedVector: Vector):
+    """"Returns vector components for each dimension."""
+    start, end = observedVector.get_start_and_end()
+    vector_x = Vector().put_start_and_end_on(
+        [start[0], start[1], 0], [end[0], start[1], 0])
+    vector_y = Vector().put_start_and_end_on(
+        [start[0], start[1], 0], [start[0], end[1], 0])
+
+    return (vector_x, vector_y)

@@ -45,7 +45,7 @@ class ForceVisual(MovingCameraScene):
             0.5).next_to(mainCharge, UP*0.7)
         totalForceVector = Vector(getCoulombForce(
             mainCharge, initialDiffCharge)).next_to(totalForceDescription, UP*0.9)
-        self.play(Create(totalForceVector), Write(totalForceDescription))
+        self.play(Create(VGroup(totalForceVector, totalForceDescription)))
 
         chargeShiftValue = CHARGE_SHIFT_VALUE * UP
         for i in range(1, 1 + NUMBER_OF_APPROXIS):
@@ -81,5 +81,47 @@ class ForceVisual(MovingCameraScene):
         self.play(FadeOut(VGroup(*toBeFaded)))
         self.play(observedDiff.text.animate.become(Tex("dQ").scale(0.5)))
 
+        self.camera.frame.save_state()
+        observedDiffLabel = Tex(r"$d\vec{F}$").scale(
+            0.2).align_to(observedDiff.forceVector, UP+RIGHT).shift(UP*0.05)
         self.play(self.camera.frame.animate.scale(
-            CAMERA_ZOOM).move_to(observedDiff.forceVector))
+            CAMERA_ZOOM_1).move_to(observedDiff.forceVector), Create(observedDiffLabel))
+        self.wait()
+        self.play(Restore(self.camera.frame))
+
+        self.play(FadeOut(VGroup(totalForceDescription, totalForceVector)))
+        diffCopy = observedDiff.forceVector.copy()
+        zoomedDiffVector = Vector(
+            VECTOR_DIFF_ZOOM*observedDiff.forceVector.get_vector()).move_to(RIGHT+UP*2).set_color(PURPLE_C)
+        self.play(diffCopy.animate.become(zoomedDiffVector), run_time=3)
+        zoomedDiffLabel = Tex(r"$d\vec{F}$").scale(FORCE_LABEL_SIZE).move_to(
+            zoomedDiffVector.get_center()+0.1*DL, aligned_edge=UR).set_color(PURPLE_C)
+        self.play(Create(zoomedDiffLabel))
+
+        diff_x, diff_y = getVectorComponents(zoomedDiffVector)
+        self.play(Create(VGroup(diff_x, diff_y)))
+        self.play(diff_y.animate.shift(RIGHT*zoomedDiffVector.get_vector()[0]))
+        diffLabel_x = Tex(r"$dF_x$").scale(
+            FORCE_LABEL_SIZE).move_to(diff_x.get_top(), aligned_edge=DOWN)
+        diffLabel_y = Tex(r"$dF_y$").scale(
+            FORCE_LABEL_SIZE).move_to(diff_y.get_right(), aligned_edge=LEFT)
+        self.play(Create(VGroup(diffLabel_x, diffLabel_y)))
+
+        coulombEq = MathTex(
+            r"d\vec{F_q}", r"= k\frac{q \cdot dQ}{r_{12}^2}\hat{r}_{21}", font_size=EQ_FONT_SIZE)
+        coulombEq[0][1:4].set_color(PURPLE_C)  # F_q
+        coulombEq[1][2:3].set_color(BLUE)  # q
+        coulombEq[1][4:6].set_color(RED)  # dQ
+        self.play(Write(coulombEq), mainChargeLabel.animate.set_color(
+            BLUE), observedDiff.text.animate.set_color(RED), run_time=2)
+        coulombEqDensity = MathTex(
+            r"= k\frac{q\cdot \lambda dL}{r_{12}^2}\hat{r}_{21}", font_size=EQ_FONT_SIZE).next_to(coulombEq, RIGHT)
+        self.play(Write(coulombEqDensity))
+
+        mainChargeBrace = Brace(Line(ax.get_origin(), mainCharge.get_center()))
+        mainChargeBraceText = mainChargeBrace.get_text("x")
+        diffChargeBrace = Brace(
+            Line(ax.get_origin(), observedDiff.charge.get_center()), direction=UP)
+        diffChargeBraceText = diffChargeBrace.get_text("L")
+        self.play(Create(VGroup(mainChargeBrace, mainChargeBraceText)))
+        self.play(Create(VGroup(diffChargeBrace, diffChargeBraceText)))
