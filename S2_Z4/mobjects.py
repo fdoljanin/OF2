@@ -17,7 +17,6 @@ class Charge(Circle):
         Circle.__init__(self, **CONFIG, **kwargs)
         self.amount = amount if type(
             amount) == ValueTracker else ValueTracker(amount)
-        print(amount)
 
         plus = Tex("+" if amount > 0 else "-")
         plus.scale(0.8)

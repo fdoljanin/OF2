@@ -1,11 +1,12 @@
 from manim import *
+from helpers import *
 
 
 class ChargeWithInfo():
     def getUpdatedVector(self):
-        posX = self.charge.amount.get_value()
-        posY = self.charge.amount.get_value()
-        return Vector([posX, posY]).next_to(self.charge, RIGHT*2)
+        force = getCoulombForce(self.mainCharge, self.charge)
+
+        return Vector(force).next_to(self.charge, RIGHT+DOWN*0.5, aligned_edge=UP+LEFT)
 
     def __init__(self, charge, text, mainCharge):
         self.charge = charge
@@ -13,7 +14,7 @@ class ChargeWithInfo():
         self.mainCharge = mainCharge
 
         text.clear_updaters()
-        text.add_updater(lambda x: x.next_to(charge, LEFT))
+        text.add_updater(lambda x: x.next_to(charge, LEFT*0.7))
         self.forceVector = always_redraw(self.getUpdatedVector)
 
     def split(self):
