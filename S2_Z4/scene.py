@@ -36,21 +36,26 @@ class ForceVisual(Scene):
             initialDiffCharge, LEFT).scale(0.7))
         self.play(DrawBorderThenFill(initialDiffCharge))
 
-        charges = [ChargeWithInfo(
-            initialDiffCharge, chargedLineLabel, mainCharge)]
+        initialChargeInfo = ChargeWithInfo(
+            initialDiffCharge, chargedLineLabel, mainCharge)
+        charges = [initialChargeInfo]
+        self.play(Create(initialChargeInfo.forceVector))
+
         chargeShiftValue = CHARGE_SHIFT_VALUE * UP
         for i in range(1, 1 + NUMBER_OF_APPROXIS):
             newCharges = []
             animationQueue = []
             for charge in charges:
-                old, new = charge, charge.copy()
+                chargeChangeAnim, old, new = charge.split()
+                newCharges += [old, new]
                 self.add(new.forceVector)
+
                 animationQueue += [old.charge.animate.shift(-1 * chargeShiftValue).scale(
                     0.7), new.charge.animate.shift(chargeShiftValue).scale(0.7)]
                 animationQueue += [old.text.animate.become(
                     Tex(fr"$\frac{{Q}}{{{2**i}}}$").scale(0.7/np.sqrt(i))), new.text.animate.become(
                     Tex(fr"$\frac{{Q}}{{{2**i}}}$").scale(0.7/np.sqrt(i)))]
-                newCharges += [old, new]
+                animationQueue += chargeChangeAnim
 
             self.play(*animationQueue, run_time=2)
             charges = newCharges
