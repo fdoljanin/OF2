@@ -4,36 +4,47 @@
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \newcommand{\cc}{\text{\v{c}}}
+\let\oldref\ref
+\renewcommand{\ref}[1]{(\oldref{#1})}
 
 \usepackage{fancyhdr}
 \usepackage{amsmath}
 \usepackage{amsfonts}
-\usepackage{graphicx}
+\usepackage{graphicx} 
 
 \begin{document}
+\section*{Sila nabijene šipke na naboj}
+Vektorski zapis diferencijala sile iznosi:
 \begin{align}
   d\vec{F_q} & =k\frac{q \cdot dQ}{r_{12}^2}\hat{r}_{21}         \\
              & =k\frac{q \cdot \lambda dL}{r_{12}^2}\hat{r}_{21} \\
+  \label{eq:TotalDifferential}
              & =k\frac{q\cdot \lambda dL}{x^2+L^2}\hat{r}_{21}
 \end{align}
+Diferencijal po vektorskim komponentama iznosi:
 \begin{align}
   dF_x & = dF\frac{x}{\sqrt{x^2+L^2}} \\
   dF_y & = dF\frac{L}{\sqrt{x^2+L^2}}
 \end{align}
+Iznos komponente u odnosu na $|\vec{dF_q}|$ \ref{eq:TotalDifferential} proizlazi iz geometrije zadatka:
 \begin{align}
   dF_x & = dF\frac{x}{\sqrt{x^2+L^2}}                            \\
        & = k\frac{q \lambda dL}{x^2+L^2}\frac{x}{\sqrt{x^2+L^2}} \\
        & = kq{\lambda}x\frac{dL}{\sqrt{(x^2+L^2)^3}}
 \end{align}
+Ukupna sila $F_x$ iznosi, gdje \ref{Eq:InsertResolvedX} proizlazi iz integrala \ref{Eq:ExpandedIntegralX}:
 \begin{align}
   F_x & = \int dF_x                                                          \\
       & = \int_{0}^{a} kq{\lambda}x\frac{dL}{\sqrt{(x^2+L^2)^3}}             \\
       & = kq{\lambda}x\int_{0}^{a}\frac{dL}{\sqrt{(x^2+L^2)^3}}              \\
+  \label{Eq:InsertResolvedX}
       & = kq{\lambda}x\left[\frac{1}{x^2}\frac{L}{\sqrt{L^2+x^2}}\right]_0^a \\
       & = kq{\lambda}x\frac{1}{x^2}\left(\frac{a}{\sqrt{a^2+x^2}} - 0\right) \\
       & = kq\frac{{\lambda}a}{x\sqrt{a^2+x^2}} = \frac{kQq}{x\sqrt{a^2+x^2}}
 \end{align}
+Prikazani integral možemo riješiti $\tan$ substitucijom:
 \begin{align}
+  \label{Eq:ExpandedIntegralX}
   \int\frac{dL}{\sqrt{(x^2+L^2)^3}}
    & = \frac{1}{x^3}\int\frac{dL}{\left(1+\frac{L^2}{x^2}\right)^\frac{3}{2}}                                 \\
    & = \begin{vmatrix}
@@ -47,15 +58,20 @@
    & = \frac{1}{x^2}\sin\tan^{-1}\left(\frac{L}{x}\right) + C                                                 \\
    & = \frac{1}{x^2}\frac{L}{\sqrt{L^2+x^2}} + C
 \end{align}
+Ukupna sila $F_y$ iznosi, gdje \ref{Eq:InsertResolvedY} proizlazi iz integrala \ref{Eq:ExpandedIntegralY}:
+
 \begin{align}
   F_y & = {\int}dF\frac{L}{\sqrt{x^2+L^2}}                                     \\
       & = \int_{0}^{a}k\frac{q{\lambda}dL}{x^2+L^2}\frac{L}{\sqrt{x^2+L^2}}    \\
       & = kq{\lambda}\int_{0}^{a}\frac{L dL}{\left(x^2+L^2\right)^\frac{3}{2}} \\
+  \label{Eq:InsertResolvedY}
       & = kq{\lambda}\left[-\frac{1}{\sqrt{x^2+L^2}}\right]_{0}^{a}            \\
       & = \frac{kqQ}{a}\left(\frac{1}{x} - \frac{1}{\sqrt{x^2+a^2}}\right)
 \end{align}
+Prikazani integral možemo riješiti $u$-substitucijom:
 \begin{align}
   \int\frac{L dL}{\left(x^2+L^2\right)^\frac{3}{2}}
+  \label{Eq:ExpandedIntegralY}
    & = \begin{vmatrix}
          u = x^2+L^2 \\
          du = 2LdL
