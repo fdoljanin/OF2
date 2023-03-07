@@ -6,6 +6,9 @@ from helperStructures import *
 
 from helpers import getCoulombForce
 from consts import *
+from equations import *
+
+from manim_slides import Slide  # I changed its base class to MovingCameraScene
 
 
 class ForceVisual(MovingCameraScene):
@@ -81,15 +84,21 @@ class ForceVisual(MovingCameraScene):
         self.play(FadeOut(VGroup(*toBeFaded)))
         self.play(observedDiff.text.animate.become(Tex("dQ").scale(0.5)))
 
+        # optimization
+        for chargeInfo in charges:
+            if chargeInfo != observedDiff:
+                self.remove(chargeInfo)
+
         self.camera.frame.save_state()
         observedDiffLabel = Tex(r"$d\vec{F}$").scale(
             0.2).align_to(observedDiff.forceVector, UP+RIGHT).shift(UP*0.05)
         self.play(self.camera.frame.animate.scale(
             CAMERA_ZOOM_1).move_to(observedDiff.forceVector), Create(observedDiffLabel))
-        self.wait()
+        self.pause()
         self.play(Restore(self.camera.frame))
 
         self.play(FadeOut(VGroup(totalForceDescription, totalForceVector)))
+        self.remove(totalForceDescription, totalForceVector)
         diffCopy = observedDiff.forceVector.copy()
         zoomedDiffVector = Vector(
             VECTOR_DIFF_ZOOM*observedDiff.forceVector.get_vector()).move_to(RIGHT+UP*2).set_color(PURPLE_C)
@@ -128,7 +137,7 @@ class ForceVisual(MovingCameraScene):
         self.play(Create(VGroup(diffChargeBrace, diffChargeBraceText)))
 
         coulombEqUpdate = MathTex(
-            r"= k\frac{q\cdot \lambda dL}{L^2+x^2}\hat{r}_{21}", font_size=EQ_FONT_SIZE).next_to(coulombEq, RIGHT)
+            r"= k\frac{q\cdot \lambda dL}{x^2+L^2}\hat{r}_{21}", font_size=EQ_FONT_SIZE).next_to(coulombEq, RIGHT)
         self.play(coulombEqExpand.animate.become(coulombEqUpdate), run_time=2)
 
         coulombEq_x = MathTex(
@@ -138,10 +147,113 @@ class ForceVisual(MovingCameraScene):
         self.play(Write(coulombEq_x), run_time=2)
         self.play(Write(coulombEq_y), run_time=2)
 
+        # integration_X
+        gc = []
         animationQueue = []
         integrationTitle_x = Tex("Integracija za $x$").move_to(5*DOWN+5*LEFT)
-        coulombDifferential_x = coulombEq_x.copy()
+        diffArrayEqn_x.next_to(integrationTitle_x, DOWN).align_to(
+            integrationTitle_x, LEFT)
+
+        cEq_copy = coulombEq_x.copy()
         animationQueue += [Create(integrationTitle_x),
-                           coulombDifferential_x.animate.next_to(integrationTitle_x, DOWN).align_to(integrationTitle_x, RIGHT)]
+                           cEq_copy.animate.become(diffArrayEqn_x[0:2])]
         animationQueue += [self.camera.frame.animate.shift(8*DOWN)]
         self.play(*animationQueue, run_time=5)
+
+        animationQueue = getMultipartTexMorphAnimation(
+            diffArrayEqn_x, start=2, garbageCollector=gc)
+        for anim in animationQueue:
+            self.play(anim)
+
+        intArrayEqn_x.next_to(diffArrayEqn_x).shift(
+            4*RIGHT).align_to(diffArrayEqn_x, UP)
+        self.play(Create(intArrayEqn_x[0]))
+        dAE_copy = diffArrayEqn_x[0].copy()
+        self.play(dAE_copy.animate.become(intArrayEqn_x[1]))
+        animationQueue = getMultipartTexMorphAnimation(
+            intArrayEqn_x, start=2, end=3, garbageCollector=gc)
+        for anim in animationQueue:
+            self.play(anim)
+
+        # integrate F_x till end
+        self.camera.frame.save_state()
+        intExpandEqn_x.next_to(intArrayEqn_x, RIGHT).shift(
+            2*RIGHT).align_to(intArrayEqn_x, UP)
+        animationQueue = []
+        iAE_copy = intArrayEqn_x[3].copy()
+        animationQueue += [iAE_copy.animate.become(intExpandEqn_x[0])]
+        animationQueue += [self.camera.frame.animate.shift(RIGHT*8+DOWN)]
+        self.play(*animationQueue)
+
+        animationQueue = getMultipartTexMorphAnimation(
+            intExpandEqn_x, start=1, garbageCollector=gc)
+        for anim in animationQueue:
+            self.play(anim)
+
+        animationQueue = []
+        animationQueue += [intExpandEqn_x[-1].animate.become(intArrayEqn_x[4])]
+        animationQueue += [Restore(self.camera.frame)]
+        self.play(*animationQueue, run_time=2)
+        animationQueue = getMultipartTexMorphAnimation(
+            intArrayEqn_x, start=5, garbageCollector=gc)
+        for anim in animationQueue:
+            self.play(anim)
+        forceSurroundRectange_x = SurroundingRectangle(
+            intArrayEqn_x[-1], color=PURPLE_C)
+        self.play(Create(forceSurroundRectange_x), run_time=2)
+
+        # move to origin
+        animationQueue = []
+        forceResult_x.next_to(coulombEq_x, DOWN).align_to(coulombEq_x, LEFT)
+        self.play(self.camera.frame.animate.scale(CAMERA_ZOOM_2), run_time=2)
+        animationQueue += [intArrayEqn_x[-1].copy().animate.become(forceResult_x)]
+        animationQueue += [self.camera.frame.animate.scale(
+            1/CAMERA_ZOOM_2).move_to(ORIGIN)]
+        self.play(*animationQueue, run_time=2)
+
+        # optimization
+        gc += [dAE_copy, iAE_copy, integrationTitle_x, cEq_copy]
+        self.remove(*gc)
+
+        self.camera.frame.save_state()
+        # start y anim
+        animationQueue = []
+        integrationTitle_y = Tex(
+            "Integracija za $y$").move_to(3*UP + 9.2*RIGHT)
+        intArrayEqn_y.next_to(integrationTitle_y, DOWN).align_to(
+            integrationTitle_y, LEFT)
+
+        animationQueue += [Create(integrationTitle_y),
+                           coulombEq_y.copy().animate.become(intArrayEqn_y[0])]
+        animationQueue += [self.camera.frame.animate.shift(14.2*RIGHT)]
+        self.play(*animationQueue)
+        # integrate y
+        animationQueue = getMultipartTexMorphAnimation(
+            intArrayEqn_y, start=1, end=2)
+        for anim in animationQueue:
+            self.play(anim)
+
+        intExpandEqn_y.next_to(intArrayEqn_y, RIGHT).shift(
+            2*RIGHT).align_to(intArrayEqn_y, UP)
+        self.play(intArrayEqn_y[2].animate.become(intExpandEqn_y[0]))
+        animationQueue = getMultipartTexMorphAnimation(intExpandEqn_y, start=1)
+        for anim in animationQueue:
+            self.play(anim)
+
+        self.play(intExpandEqn_y[-1].animate.become(intArrayEqn_y[3]))
+        animationQueue = getMultipartTexMorphAnimation(intArrayEqn_y, start=4)
+        for anim in animationQueue:
+            self.play(anim)
+
+        forceSurroundRectange_y = SurroundingRectangle(
+            intArrayEqn_y[-1], color=PURPLE_C)
+        self.play(Create(forceSurroundRectange_y), run_time=2)
+
+        # move to origin
+        animationQueue = []
+        forceResult_y.next_to(coulombEq_y, DOWN).align_to(coulombEq_y, LEFT)
+        self.play(self.camera.frame.animate.scale(CAMERA_ZOOM_2), run_time=2)
+        animationQueue += [intArrayEqn_y[-1].copy().animate.become(forceResult_y)]
+        animationQueue += [self.camera.frame.animate.scale(
+            1/CAMERA_ZOOM_2).move_to(ORIGIN)]
+        self.play(*animationQueue, run_time=2)

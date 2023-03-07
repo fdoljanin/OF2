@@ -11,13 +11,57 @@
 \usepackage{graphicx}
 
 \begin{document}
-\begin{eqnarray}
-  d\vec{F_q} &= k\frac{q \cdot dQ}{r_{12}^2}\hat{r}_{21}\\
-  &= k\frac{q \cdot \lambda dL}{r_{12}^2}\hat{r}_{21} \\
-  &= k\frac{q\cdot \lambda dL}{L^2+x^2}\hat{r}_{21} \\
-\end{eqnarray}
-\begin{eqnarray}
-  dF_x = dF\frac{x}{\sqrt{x^2+L^2}} \\
-  dF_y = dF \cdot \frac{L}{\sqrt{x^2+L^2}}
-\end{eqnarray}
+\begin{align}
+  d\vec{F_q} & =k\frac{q \cdot dQ}{r_{12}^2}\hat{r}_{21}         \\
+             & =k\frac{q \cdot \lambda dL}{r_{12}^2}\hat{r}_{21} \\
+             & =k\frac{q\cdot \lambda dL}{x^2+L^2}\hat{r}_{21}
+\end{align}
+\begin{align}
+  dF_x & = dF\frac{x}{\sqrt{x^2+L^2}} \\
+  dF_y & = dF\frac{L}{\sqrt{x^2+L^2}}
+\end{align}
+\begin{align}
+  dF_x & = dF\frac{x}{\sqrt{x^2+L^2}}                            \\
+       & = k\frac{q \lambda dL}{x^2+L^2}\frac{x}{\sqrt{x^2+L^2}} \\
+       & = kq{\lambda}x\frac{dL}{\sqrt{(x^2+L^2)^3}}
+\end{align}
+\begin{align}
+  F_x & = \int dF_x                                                          \\
+      & = \int_{0}^{a} kq{\lambda}x\frac{dL}{\sqrt{(x^2+L^2)^3}}             \\
+      & = kq{\lambda}x\int_{0}^{a}\frac{dL}{\sqrt{(x^2+L^2)^3}}              \\
+      & = kq{\lambda}x\left[\frac{1}{x^2}\frac{L}{\sqrt{L^2+x^2}}\right]_0^a \\
+      & = kq{\lambda}x\frac{1}{x^2}\left(\frac{a}{\sqrt{a^2+x^2}} - 0\right) \\
+      & = kq\frac{{\lambda}a}{x\sqrt{a^2+x^2}} = \frac{kQq}{x\sqrt{a^2+x^2}}
+\end{align}
+\begin{align}
+  \int\frac{dL}{\sqrt{(x^2+L^2)^3}}
+   & = \frac{1}{x^3}\int\frac{dL}{\left(1+\frac{L^2}{x^2}\right)^\frac{3}{2}}                                 \\
+   & = \begin{vmatrix}
+         \tan\theta = \frac{L}{x} \\
+         \frac{1}{\cos^2\theta}d\theta = \frac{dL}{x}
+       \end{vmatrix}                                                            \\
+   & = \frac{1}{x^3}\int\frac{x}{\cos^2\theta}\frac{d\theta}{\left(1+\tan^2\theta\right)^{\frac{3}{2}}}       \\
+   & = \frac{x}{x^3}\int\frac{1}{\cos^2\theta}\frac{d\theta}{\left(\frac{1}{\cos^2\theta}\right)^\frac{3}{2}} \\
+   & = \frac{1}{x^2}\int\cos\theta{d}\theta                                                                   \\
+   & = \frac{1}{x^2}\sin\theta + C                                                                            \\
+   & = \frac{1}{x^2}\sin\tan^{-1}\left(\frac{L}{x}\right) + C                                                 \\
+   & = \frac{1}{x^2}\frac{L}{\sqrt{L^2+x^2}} + C
+\end{align}
+\begin{align}
+  F_y & = {\int}dF\frac{L}{\sqrt{x^2+L^2}}                                     \\
+      & = \int_{0}^{a}k\frac{q{\lambda}dL}{x^2+L^2}\frac{L}{\sqrt{x^2+L^2}}    \\
+      & = kq{\lambda}\int_{0}^{a}\frac{L dL}{\left(x^2+L^2\right)^\frac{3}{2}} \\
+      & = kq{\lambda}\left[-\frac{1}{\sqrt{x^2+L^2}}\right]_{0}^{a}            \\
+      & = \frac{kqQ}{a}\left(\frac{1}{x} - \frac{1}{\sqrt{x^2+a^2}}\right)
+\end{align}
+\begin{align}
+  \int\frac{L dL}{\left(x^2+L^2\right)^\frac{3}{2}}
+   & = \begin{vmatrix}
+         u = x^2+L^2 \\
+         du = 2LdL
+       \end{vmatrix}                                   \\
+   & = \frac{1}{2}\int\frac{du}{u^\frac{3}{2}}          \\
+   & = -\frac{1}{2\cdot\frac{1}{2}}u^{-\frac{1}{2}} + C \\
+   & = -\frac{1}{\sqrt{x^2+L^2}} + C
+\end{align}
 \end{document}

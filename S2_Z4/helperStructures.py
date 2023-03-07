@@ -28,3 +28,25 @@ class ChargeWithInfo():
             copy.charge.amount.get_value() / 2)]
 
         return (chargeChangeAnim, self, copy)
+
+
+def getMultipartTexMorphAnimation(texMobject, start=0, end=0, garbageCollector=[]):
+    end = end if end > 0 else len(texMobject)-1
+
+    animationQueue = []
+    if start == 0:
+        animationQueue += [Write(texMobject[0])]
+        prev = texMobject[0].copy()
+    else:
+        prev = texMobject[start-1].copy()
+
+    garbageCollector += [prev]
+
+    for i in range(start, end+1):
+        new = texMobject[i]
+        animationQueue += [prev.animate.become(new)]
+        prev = new.copy()
+
+        garbageCollector += [prev]
+
+    return animationQueue
