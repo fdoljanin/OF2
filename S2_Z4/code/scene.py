@@ -13,6 +13,11 @@ from manim_slides import Slide  # I changed its base class to MovingCameraScene
 
 class ForceVisual(MovingCameraScene):
     def construct(self):
+        titleMobject = Tex(r"2. seminar - 4. zadatak")
+        self.play(Create(titleMobject))
+        self.play(Uncreate(titleMobject))
+        self.remove(titleMobject)
+
         ax = Axes(
             x_range=X_RANGE,
             y_range=Y_RANGE,
@@ -36,9 +41,9 @@ class ForceVisual(MovingCameraScene):
         self.play(chargedLine.animate.set_color(RED_A).set_stroke_width(5))
         initialDiffCharge = Charge(Charge.Type.POSITIVE).move_to(
             chargedLine.get_center())
-        self.play(chargedLineLabel.animate.next_to(
-            initialDiffCharge, LEFT).scale(0.7))
-        self.play(DrawBorderThenFill(initialDiffCharge))
+        self.play(chargedLineLabel.animate.scale(0.7))
+        self.play(DrawBorderThenFill(initialDiffCharge), chargedLineLabel.animate.next_to(
+            initialDiffCharge, LEFT*0.7))
 
         initialChargeInfo = ChargeWithInfo(
             initialDiffCharge, chargedLineLabel, mainCharge)
@@ -85,6 +90,7 @@ class ForceVisual(MovingCameraScene):
         self.play(observedDiff.text.animate.become(Tex("dQ").scale(0.5)))
 
         # optimization
+        observedDiff.stopUpdaters()
         for chargeInfo in charges:
             if chargeInfo != observedDiff:
                 self.remove(chargeInfo)
@@ -109,7 +115,7 @@ class ForceVisual(MovingCameraScene):
 
         diff_x, diff_y = getVectorComponents(zoomedDiffVector)
         self.play(Create(VGroup(diff_x, diff_y)))
-        self.play(diff_y.animate.shift(RIGHT*zoomedDiffVector.get_vector()[0]))
+        self.play(diff_x.animate.shift(UP*zoomedDiffVector.get_vector()[1]))
         diffLabel_x = Tex(r"$dF_x$").scale(
             FORCE_LABEL_SIZE).move_to(diff_x.get_top(), aligned_edge=DOWN)
         diffLabel_y = Tex(r"$dF_y$").scale(
@@ -138,7 +144,8 @@ class ForceVisual(MovingCameraScene):
 
         coulombEqUpdate = MathTex(
             r"= k\frac{q\cdot \lambda dL}{x^2+L^2}\hat{r}_{21}", font_size=EQ_FONT_SIZE).next_to(coulombEq, RIGHT)
-        self.play(coulombEqExpand.animate.become(coulombEqUpdate), run_time=2)
+        self.play(coulombEqExpand.animate.become(
+            coulombEqUpdate), run_time=2)
 
         coulombEq_x = MathTex(
             r"dF_x = dF\frac{x}{\sqrt{x^2+L^2}}", font_size=EQ_FONT_SIZE).next_to(coulombEq, DOWN).align_to(coulombEq, LEFT)
@@ -257,3 +264,57 @@ class ForceVisual(MovingCameraScene):
         animationQueue += [self.camera.frame.animate.scale(
             1/CAMERA_ZOOM_2).move_to(ORIGIN)]
         self.play(*animationQueue, run_time=2)
+
+
+class ForceDemo(MovingCameraScene):
+    def construct(self):
+        ax = Axes(axis_config={
+            "include_ticks": False
+        })
+        self.play(Create(ax))
+
+        chargedLineLength = DEMO_LINELEN_1
+        mainCharge = Charge(Charge.Type.NEGATIVE).move_to((3, 0, 0)).scale(0.7)
+        mainChargeLabel = Tex("-q").next_to(mainCharge, DOWN)
+        chargedLine = Line([0, 0, 0], [0, chargedLineLength,
+                           0], stroke_width=8, color=RED)
+        chargedLineLabel = Tex("Q").next_to(chargedLine, LEFT)
+        self.play(DrawBorderThenFill(
+            VGroup(mainCharge, chargedLine, mainChargeLabel, chargedLineLabel)))
+
+        self.play(FadeOut(VGroup(mainChargeLabel, chargedLineLabel)))
+        self.remove(mainChargeLabel, chargedLineLabel)
+
+        forceVector = always_redraw(lambda: Arrow(start=mainCharge.get_center(
+        ), end=mainCharge.get_center()+getFieldVectorFromTask(chargedLineLength, DEMO_CHARGE_ON_LINE, mainCharge), buff=SMALL_BUFF))
+        self.play(Create(forceVector))
+
+        for position in DEMO_POSITIONS:
+            self.play(mainCharge.animate.move_to(position))
+
+        self.play(Rotating(mainCharge,
+                           radians=2 * PI,
+                           about_point=ORIGIN), run_time=6)
+
+        self.play(FadeOut(VGroup(forceVector, mainCharge)))
+
+        forceVector.clear_updaters()
+        self.remove(forceVector, mainCharge)
+
+        chargedLineLength = ValueTracker(DEMO_LINELEN_1)
+
+        def fieldFunc(pos): return np.array(
+            getFieldVectorFromTask(chargedLineLength.get_value(), 0.05, position=pos))
+
+        forceField = always_redraw(lambda: ArrowVectorField(fieldFunc))
+        self.play(*[GrowArrow(force) for force in forceField], run_time=2)
+        self.add(forceField)
+
+        chargedLine.add_updater(lambda cl: cl.put_start_and_end_on(
+            [0, 0, 0], [0, chargedLineLength.get_value(), 0]))
+
+        self.play(chargedLineLength.animate.set_value(
+            DEMO_LINELEN_2))
+        self.play(chargedLineLength.animate.set_value(
+            DEMO_LINELEN_3), run_time=2)
+        self.wait()

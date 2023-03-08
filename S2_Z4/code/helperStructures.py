@@ -3,10 +3,10 @@ from helpers import *
 
 
 class ChargeWithInfo():
-    def getUpdatedVector(self):
+    def __getUpdatedVector(self):
         force = getCoulombForce(self.mainCharge, self.charge)
 
-        return Vector(force).next_to(self.charge, RIGHT+DOWN*0.5, aligned_edge=UP+LEFT)
+        return Vector(force).next_to(self.charge.get_center(), RIGHT, aligned_edge=UP+LEFT)
 
     def __init__(self, charge, text, mainCharge):
         self.charge = charge
@@ -15,7 +15,7 @@ class ChargeWithInfo():
 
         text.clear_updaters()
         text.add_updater(lambda x: x.next_to(charge, LEFT*0.7))
-        self.forceVector = always_redraw(self.getUpdatedVector)
+        self.forceVector = always_redraw(self.__getUpdatedVector)
 
     def split(self):
         copy = ChargeWithInfo(self.charge.copy(),
@@ -28,6 +28,10 @@ class ChargeWithInfo():
             copy.charge.amount.get_value() / 2)]
 
         return (chargeChangeAnim, self, copy)
+
+    def stopUpdaters(self):
+        self.forceVector.clear_updaters()
+        self.text.clear_updaters()
 
 
 def getMultipartTexMorphAnimation(texMobject, start=0, end=0, garbageCollector=[]):

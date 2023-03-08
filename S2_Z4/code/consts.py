@@ -1,3 +1,4 @@
+# ForceVisual
 X_RANGE = [0, 10]
 Y_RANGE = [0, 10]
 X_LENGTH = 10
@@ -20,3 +21,11 @@ VECTOR_DIFF_ZOOM = 12
 
 FORCE_LABEL_SIZE = 0.8
 EQ_FONT_SIZE = 30
+
+# ForceDemo
+DEMO_POSITIONS = [(1, 2, 0), (1, -2, 0), (-3, -3, 0), (-4, 2, 0), (
+                  0.01, -3, 0), (0.5, 1, 0), (7, 1, 0), (5, -1, 0), (1.4, -1.4, 0)]
+DEMO_CHARGE_ON_LINE = 0.05
+DEMO_LINELEN_1 = 2
+DEMO_LINELEN_2 = 6
+DEMO_LINELEN_3 = 0.01

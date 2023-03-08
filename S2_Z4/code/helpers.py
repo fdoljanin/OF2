@@ -24,9 +24,30 @@ def getCoulombForce(observedCharge: Charge, otherCharge: Charge):
     ) * otherCharge.amount.get_value() / np.square(chargeDistance)
 
     valuesPerDimension = [
-        forceValue * (c2[i]-c1[i]) / chargeDistance for i in range(len(c1))]
+        forceValue * (c1[i]-c2[i]) / chargeDistance for i in range(len(c1))]
 
     return valuesPerDimension
+
+
+def getFieldVectorFromTask(rodLength: Integer, rodCharge: Integer, observedCharge: Charge = None, position: np.array = None):
+    if observedCharge is not None:
+        a, Q, q = rodLength, rodCharge, observedCharge.amount.get_value()
+        x, y, _ = observedCharge.get_center()
+    elif position is not None:
+        a, Q, q = rodLength, rodCharge, 1
+        x, y, _ = position
+
+    if x == 0 and 0 <= y <= a:
+        return (0, 0, 0)
+    elif x == 0:
+        x = 0.00001
+
+    force_x = COULOMB_CONST*Q*q / \
+        (a*x)*(y/np.sqrt(x**2+y**2) - (y-a)/np.sqrt(x**2+(y-a)**2))
+    force_y = COULOMB_CONST*Q*q/a * \
+        (1/np.sqrt(x**2+(y-a)**2) - 1/np.sqrt(x**2+y**2))
+
+    return (force_x, force_y, 0)
 
 
 def getVectorComponents(observedVector: Vector):
