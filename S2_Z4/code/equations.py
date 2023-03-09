@@ -51,3 +51,6 @@ intExpandEqn_y = MathTex(r"\int\frac{L dL}{\left(x^2+L^2\right)^\frac{3}{2}}",
                          r"& = -\frac{1}{2\cdot\frac{1}{2}}u^{-\frac{1}{2}} + C\\",
                          r"& = -\frac{1}{\sqrt{x^2+L^2}} + C",
                          font_size=EQ_FONT_SIZE)
+
+fieldEqn = MathTex(
+    r"\vec{E} & = \frac{kQ}{ax}\left(\frac{y}{\sqrt{x^2+y^2}} - \frac{y-a}{\sqrt{x^2+(y-a)^2}}\right)\hat{i} \\&+ \frac{kQ}{a}\left(\frac{1}{\sqrt{x^2+(y-a)^2}} - \frac{1}{\sqrt{x^2+y^2}}\right)\hat{j}", font_size=EQ_FONT_SIZE_SMALL)

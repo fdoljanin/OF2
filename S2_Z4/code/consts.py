@@ -21,11 +21,13 @@ VECTOR_DIFF_ZOOM = 12
 
 FORCE_LABEL_SIZE = 0.8
 EQ_FONT_SIZE = 30
+EQ_FONT_SIZE_SMALL = 20
 
 # ForceDemo
+MAIN_CHARGE_POSITION_DEMO = (3, 0, 0)
 DEMO_POSITIONS = [(1, 2, 0), (1, -2, 0), (-3, -3, 0), (-4, 2, 0), (
-                  0.01, -3, 0), (0.5, 1, 0), (7, 1, 0), (5, -1, 0), (1.4, -1.4, 0)]
+                  0.01, -3, 0), (0.5, 1, 0), (7, 1, 0), (5, -1, 0), (1.4, -1.4, 0), MAIN_CHARGE_POSITION_DEMO]
 DEMO_CHARGE_ON_LINE = 0.05
 DEMO_LINELEN_1 = 2
-DEMO_LINELEN_2 = 6
+DEMO_LINELEN_2 = 8
 DEMO_LINELEN_3 = 0.01
