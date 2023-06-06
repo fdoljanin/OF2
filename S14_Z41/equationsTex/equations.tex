@@ -14,7 +14,7 @@
 
 \begin{document}
 \section*{Frekvencija maksimalne snage}
-U pronalasku frekvencije maksimalne snage koristit ćemo se općepoznatim izrazom za trenutnu snagu na otporniku $P = I^2R$. Kako je riječ o izmjeničnoj struji, riječ je o efektivnoj vrijednosti struje $I_{ef}$:
+U pronalasku frekvencije maksimalne snage koristit ćemo se općepoznatim izrazom za trenutnu snagu na otporniku $P = I^2R$. Kako je riječ o izmjeničnoj struji, razmatramo efektivnu vrijednost struje $I_{ef}$:
 \begin{equation}
   \label{eq:EffectivePower}
   P = I_{ef}^2R = \left(\frac{I_{max}}{\sqrt{2}}\right)^2R = \frac{I_{max}^2R}{2}
@@ -42,5 +42,20 @@ Očigledno je da $\omega L - \frac{1}{\omega C} = 0$, pa je maksimalna snaga ost
 \begin{equation}
   \omega_0 = \frac{1}{\sqrt{LC}} \approx 224\text{Hz}
 \end{equation}
-i uvrštavanjem u \ref{eq:EffectivePowerTotal} dobije se $P_{max} = 500\text{W}$
+i uvrštavanjem u \ref{eq:EffectivePowerTotal} dobije se $P_{max} = 500\text{W}$.
+\newpage
+\section*{Frekvencija upola manje snage}
+Frekvenciju upola manje snage dobit ćemo uvrštavanjem u formulu \ref{eq:EffectivePowerTotal} za snagu:
+\begin{align}
+  P_{1}                                                                                                  & = \frac{1}{2}P_{max}                                                      \\
+  \frac{\left(U_{max}R\right)^2}{2} \cdot \frac{1}{\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)} & = \frac{1}{2} \cdot \frac{\left(U_{max}R\right)^2}{2} \cdot \frac{1}{R^2} \\
+  2R^2                                                                                                   & = R^2 + \left(\omega L - \frac{1}{\omega C}\right)^2                      \\
+  \label{eq:HalfPowerSolution}
+  L\omega^2 \pm R\omega - \frac{1}{C}                                                                    & = 0
+\end{align}
+Rješenje kvadratne jednažbe \ref{eq:HalfPowerSolution} iznosi:
+\begin{equation}
+  \omega_{1,2} = \frac{\pm R \pm \sqrt{R^2 + 4L/C}}{2L}
+\end{equation}
+Uzimajući u obzir da samo pozitivna rješenja imaju fizikalnog smisla, uvrštavanjem brojeva dobije se: $\omega_1 \approx 221\text{Hz}$ i $\omega_2 \approx 226\text{Hz}$.
 \end{document}
