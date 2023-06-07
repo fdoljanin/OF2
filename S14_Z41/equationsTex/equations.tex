@@ -14,7 +14,7 @@
 
 \begin{document}
 \section*{Frekvencija maksimalne snage}
-U pronalasku frekvencije maksimalne snage koristit ćemo se općepoznatim izrazom za trenutnu snagu na otporniku $P = I^2R$. Kako je riječ o izmjeničnoj struji, razmatramo efektivnu vrijednost struje $I_{ef}$:
+U pronalasku frekvencije maksimalne snage koristit ćemo se poznatim izrazom za trenutnu snagu na otporniku $P = I^2R$. Kako je riječ o izmjeničnoj struji, razmatramo efektivnu vrijednost struje $I_{ef}$:
 \begin{equation}
   \label{eq:EffectivePower}
   P = I_{ef}^2R = \left(\frac{I_{max}}{\sqrt{2}}\right)^2R = \frac{I_{max}^2R}{2}
@@ -24,18 +24,19 @@ Odnos struje i napona možemo zapisati kao:
   \label{eq:CurrentVoltageRelation}
   I = \frac{U}{Z} = \frac{U_{max}\sin(\omega t)}{\sqrt{R^2 + (\omega L - \frac{1}{\omega C})^2}}
 \end{equation}
-$I_{max}$ se događa periodično, kada je $\sin(\omega t) = 1$, dakle ovisno o varijabli $t$.\\Tada iz \ref{eq:EffectivePower} i \ref{eq:CurrentVoltageRelation} za $P$ imamo:
+$I_{max}$ se događa periodično, kada je $\sin(\omega t) = 1$, dakle ovisno o varijabli $t$.\\
+Tada iz \ref{eq:EffectivePower} i \ref{eq:CurrentVoltageRelation} za $P$ imamo:
 \begin{align}
   P & = \frac{I_{max}^2R}{2}                                                                                   \\
-    & = \frac{\left(U_{max}R\right)^2}{2\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)}                  \\
+    & = \frac{U_{max}^2R}{2\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)}                  \\
   \label{eq:EffectivePowerTotal}
-    & = \frac{\left(U_{max}R\right)^2}{2} \cdot \frac{1}{\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)}
+    & = \frac{U_{max}^2R}{2} \cdot \frac{1}{\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)}
 \end{align}
 Maksimalna snaga u odnosu na varijablu $\omega$ dobija se deriviranjem:
 \begin{align}
-  \frac{dP}{d\omega} & = \frac{\left(U_{max}R\right)^2}{2} \cdot \frac{d}{d\omega}\left(\frac{1}{\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)}\right)                                                          \\
-                     & = \frac{\left(U_{max}R\right)^2}{2} \cdot \frac{-1}{\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)^2} \cdot \frac{d}{d\omega}\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)         \\
-                     & = \frac{\left(U_{max}R\right)^2}{2} \cdot \frac{-1}{\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)^2} \cdot \left(2(\omega L - \frac{1}{\omega C})\cdot (L + \frac{1}{\omega^2C}) \right) \\
+  \frac{dP}{d\omega} & = \frac{I_{max}^2R}{2} \cdot \frac{d}{d\omega}\left(\frac{1}{\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)}\right)                                                          \\
+                     & = \frac{I_{max}^2R}{2} \cdot \frac{-1}{\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)^2} \cdot \frac{d}{d\omega}\left(R^2 + \left(\omega L - \frac{1}{\omega C}\right)^2\right)         \\
+                     & = \frac{I_{max}^2R}{2} \cdot \frac{-1}{\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)^2} \cdot \left(2\left(\omega L - \frac{1}{\omega C}\right)\cdot \left(L + \frac{1}{\omega^2C}\right) \right) \\
                      & = 0
 \end{align}
 Očigledno je da $\omega L - \frac{1}{\omega C} = 0$, pa je maksimalna snaga ostvarena kada
@@ -48,7 +49,7 @@ i uvrštavanjem u \ref{eq:EffectivePowerTotal} dobije se $P_{max} = 500\text{W}$
 Frekvenciju upola manje snage dobit ćemo uvrštavanjem u formulu \ref{eq:EffectivePowerTotal} za snagu:
 \begin{align}
   P_{1}                                                                                                  & = \frac{1}{2}P_{max}                                                      \\
-  \frac{\left(U_{max}R\right)^2}{2} \cdot \frac{1}{\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)} & = \frac{1}{2} \cdot \frac{\left(U_{max}R\right)^2}{2} \cdot \frac{1}{R^2} \\
+  \frac{I_{max}^2R}{2} \cdot \frac{1}{\left(R^2 + (\omega L - \frac{1}{\omega C})^2\right)} & = \frac{1}{2} \cdot \frac{I_{max}^2R}{2} \cdot \frac{1}{R^2} \\
   2R^2                                                                                                   & = R^2 + \left(\omega L - \frac{1}{\omega C}\right)^2                      \\
   \label{eq:HalfPowerSolution}
   L\omega^2 \pm R\omega - \frac{1}{C}                                                                    & = 0
